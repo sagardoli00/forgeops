@@ -41,9 +41,9 @@ if (!isMatch) {
     {
         id: user._id
     },
-    "forgeops-secret",
+   process.env.JWT_SECRET,
     {
-        expiresIn: "1d"
+    expiresIn: "1d"
     }
 )
 
