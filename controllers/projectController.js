@@ -3,6 +3,15 @@ const Project = require("../models/project")
 async function createProject(req, res) {
    
      const { title, description } = req.body
+     
+    const existingProject = await Project.findOne({
+    owner: req.user.id,
+    title
+})
+
+if (existingProject) {
+    return res.status(409).send("Project with this title already exists")
+}
 
     const project = new Project({
         title,
