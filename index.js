@@ -4,6 +4,7 @@ const mongoose = require("mongoose")
 const userRoutes = require("./routes/userRoutes")
 const projectRoutes = require("./routes/projectRoutes")
 const errorMiddleware = require("./middleware/errorMiddleware")
+const loggerMiddleware = require("./middleware/loggerMiddleware")
 
 const app = express()
 
@@ -17,6 +18,7 @@ const app = express()
 
   app.use(express.json())
   
+  app.use(loggerMiddleware)
   app.use(userRoutes)
   app.use(projectRoutes)
 
