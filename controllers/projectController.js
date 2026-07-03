@@ -1,9 +1,11 @@
 const Project = require("../models/project")
+const asyncHandler = require("../utils/asyncHandler")
 
-async function createProject(req, res) {
+const createProject = asyncHandler(async (req, res) =>  {
    
      const { title, description } = req.body
-     
+    
+
     const existingProject = await Project.findOne({
     owner: req.user.id,
     title
@@ -22,7 +24,7 @@ if (existingProject) {
 await project.save()
 
 res.status(201).send("Project Created Successfully")
-}
+})
 
 async function getProjects(req, res) {
 
@@ -34,7 +36,7 @@ async function getProjects(req, res) {
 
 }
 
-async function updateProject(req, res) {
+const updateProject = asyncHandler(async (req, res) => {
   
    const project = await Project.findById(req.params.id)
 
@@ -47,6 +49,7 @@ async function updateProject(req, res) {
     }
 
      const { title, description } = req.body
+     
 
     project.title = title
     project.description = description
@@ -55,9 +58,9 @@ async function updateProject(req, res) {
 
     res.json(project)
 
-}
+})
 
-async function deleteProject(req, res) {
+const deleteProject = asyncHandler(async (req, res) => {
     
     const project = await Project.findById(req.params.id)
 
@@ -72,7 +75,7 @@ async function deleteProject(req, res) {
 await project.deleteOne()
 
 res.send("Project Deleted Successfully")
-}
+})
 
 module.exports = {
     createProject,

@@ -3,6 +3,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 const userRoutes = require("./routes/userRoutes")
 const projectRoutes = require("./routes/projectRoutes")
+const errorMiddleware = require("./middleware/errorMiddleware")
 
 const app = express()
 
@@ -23,6 +24,8 @@ const app = express()
 app.get("/", (req, res) => {
     res.send("Welcome to ForgeOps")
 })
+
+app.use(errorMiddleware)
 
 app.listen(process.env.PORT, () => {
     console.log(`ForgeOps server is running on port ${process.env.PORT}`)
