@@ -1,9 +1,10 @@
 const express = require("express")
 const router = express.Router()
-
+const validateObjectId = require("../validators/objectIdValidator")
 const {
     createProject,
     getProjects,
+    getProjectById,
     updateProject,
     deleteProject
 } = require("../controllers/projectController")
@@ -23,6 +24,12 @@ router.post(
     createProject
 )
 router.get("/projects", authMiddleware, getProjects)
-router.put("/projects/:id", authMiddleware, updateProject)
-router.delete("/projects/:id", authMiddleware, deleteProject)
+router.get(
+    "/projects/:id",
+    authMiddleware,
+    validateObjectId,
+    getProjectById
+)
+router.put("/projects/:id", authMiddleware, validateObjectId, updateProject)
+router.delete("/projects/:id", authMiddleware, validateObjectId, deleteProject)
 module.exports = router

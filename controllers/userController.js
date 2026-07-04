@@ -1,5 +1,5 @@
 const User = require("../models/user")
-
+const config = require("../config/config")
 const bcrypt = require("bcrypt")
 
 const jwt = require("jsonwebtoken")
@@ -41,7 +41,7 @@ if (!isMatch) {
     {
         id: user._id
     },
-   process.env.JWT_SECRET,
+   config.jwtSecret,
     {
     expiresIn: "1d"
     }

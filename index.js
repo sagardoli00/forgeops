@@ -5,10 +5,11 @@ const userRoutes = require("./routes/userRoutes")
 const projectRoutes = require("./routes/projectRoutes")
 const errorMiddleware = require("./middleware/errorMiddleware")
 const loggerMiddleware = require("./middleware/loggerMiddleware")
+const config = require("./config/config")
 
 const app = express()
 
-  mongoose.connect(process.env.MONGO_URI)
+  mongoose.connect(config.mongoUri)
   .then(() => {
     console.log("✅ Connected to MongoDB")
   })
@@ -29,6 +30,6 @@ app.get("/", (req, res) => {
 
 app.use(errorMiddleware)
 
-app.listen(process.env.PORT, () => {
+app.listen(config.port, () => {
     console.log(`ForgeOps server is running on port ${process.env.PORT}`)
 })
