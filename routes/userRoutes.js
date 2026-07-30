@@ -1,15 +1,44 @@
-const express = require("express")
-const authMiddleware = require("../middleware/authMiddleware")
+const express = require("express");
 
-const { registerUser, loginUser } = require("../controllers/userController")
+const {
+    registerUser,
+    loginUser
+} = require("../controllers/userController");
 
-const router = express.Router()
+const authMiddleware = require("../middleware/authMiddleware");
 
-router.post("/register", registerUser)
-router.post("/login", loginUser)
+const {
+    validateRegister,
+    validateLogin
+} = require("../validators/userValidator");
 
-router.get("/profile", authMiddleware, (req, res) => {
-    res.json(req.user)
-})
+const handleValidationErrors = require("../middleware/handleValidationErrors");
 
-module.exports = router
+const router = express.Router();
+
+router.post(
+    "/register",
+    validateRegister,
+    handleValidationErrors,
+    registerUser
+);
+
+router.post(
+    "/login",
+    validateLogin,
+    handleValidationErrors,
+    loginUser
+);
+
+router.get(
+    "/profile",
+    authMiddleware,
+    (req, res) => {
+        res.json({
+            success: true,
+            user: req.user
+        });
+    }
+);
+
+module.exports = router;

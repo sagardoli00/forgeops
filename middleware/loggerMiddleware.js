@@ -1,30 +1,30 @@
-
 function loggerMiddleware(req, res, next) {
 
     const start = Date.now()
 
     res.on("finish", () => {
-       
+
         const duration = Date.now() - start
         const timestamp = new Date().toISOString()
-        let user = "Guest"
 
-    if (req.user) {
-    user = req.user.id
-    }
+        const user =
+            req.user?.id ||
+            (res.statusCode === 401 ? "Unauthorized" : "Guest")
 
-    if (res.statusCode === 401) {
-    user = "Unauthorized"
-    }
-        
- console.log(
-    `[${timestamp}] ${req.method} ${req.originalUrl} | User: ${user} | ${res.statusCode} | ${duration}ms`
-     )
+        let level = "INFO"
 
-     })
+        if (res.statusCode >= 500) {
+            level = "ERROR"
+        } else if (res.statusCode >= 400) {
+            level = "WARN"
+        }
+
+        console.log(
+            `[${timestamp}] [${level}] ${req.method} ${req.originalUrl} | User: ${user} | Status: ${res.statusCode} | ${duration}ms`
+        )
+    })
 
     next()
-
 }
 
 module.exports = loggerMiddleware

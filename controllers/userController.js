@@ -1,61 +1,76 @@
-const User = require("../models/user")
-const config = require("../config/config")
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-const jwt = require("jsonwebtoken")
+const User = require("../models/user");
+const config = require("../config/config");
+const AppError = require("../utils/AppError");
 
 async function registerUser(req, res) {
+    const { name, email, password } = req.body;
 
-    const { name, email, password } = req.body
+    const existingUser = await User.findOne({ email });
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+    if (existingUser) {
+        throw new AppError("Email already registered", 409);
+    }
 
-    const user = new User({
-    name,
-    email,
-    password: hashedPassword
-})
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-await user.save()
+    const user = await User.create({
+        name,
+        email,
+        password: hashedPassword
+    });
 
-res.send("User Registered Successfully")
-
+    res.status(201).json({
+        success: true,
+        message: "User Registered Successfully",
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email
+        }
+    });
 }
-
-
 
 async function loginUser(req, res) {
-    const { email, password } = req.body
+    const { email, password } = req.body;
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
+
     if (!user) {
-    return res.status(401).send("Invalid Credentials")
-}
-    const isMatch = await bcrypt.compare(password, user.password)
+        throw new AppError("Invalid Credentials", 401);
+    }
 
-if (!isMatch) {
-    return res.status(401).send("Invalid Credentials")
-}
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+        throw new AppError("Invalid Credentials", 401);
+    }
 
     const token = jwt.sign(
-    {
-        id: user._id
-    },
-   config.jwtSecret,
-    {
-    expiresIn: "1d"
-    }
-)
+        {
+            id: user._id
+        },
+        config.jwtSecret,
+        {
+            expiresIn: "1d"
+        }
+    );
 
-res.json({
-    message: "Login Successful",
-    token
-})
-
+    res.json({
+        success: true,
+        message: "Login Successful",
+        token,
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email
+        }
+    });
 }
 
 module.exports = {
-
     registerUser,
     loginUser
-}
+};
