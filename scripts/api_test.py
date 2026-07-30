@@ -206,10 +206,9 @@ def get_project_by_id():
 
     pass_test("Get Project By ID")
 
+    def update_project():
 
-def update_project():
-
-    print("\nUpdating Project...")
+     print("\nUpdating Project...")
 
     payload = {
         "title": "Updated Project",
