@@ -23,6 +23,7 @@ const {
 const User = require("../models/user");
 const config = require("../config/config");
 const AppError = require("../utils/AppError");
+const { uploadToCloudinary } = require("../services/uploadService");
 
 async function registerUser(req, res) {
     const { name, email, password } = req.body;
@@ -382,6 +383,32 @@ async function resetPassword(req, res) {
     });
 }
 
+async function uploadProfileImage(req, res) {
+    if (!req.file) {
+        throw new AppError("Please upload an image", 400);
+    }
+
+    const result = await uploadToCloudinary(
+        req.file.buffer,
+        "forgeops/profile-images"
+    );
+
+    const user = await User.findById(req.user._id);
+
+    user.profileImage = {
+        publicId: result.public_id,
+        url: result.secure_url
+    };
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Profile image uploaded successfully",
+        profileImage: user.profileImage
+    });
+}
+
 module.exports = {
     registerUser,
     loginUser,
@@ -391,4 +418,5 @@ module.exports = {
     verifyEmail,
     forgotPassword,
     resetPassword,
+    uploadProfileImage,
 };

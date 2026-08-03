@@ -69,6 +69,20 @@ passwordChangedAt: {
     default: null
 }
 
+,
+
+profileImage: {
+    publicId: {
+        type: String,
+        default: null
+    },
+
+    url: {
+        type: String,
+        default: null
+    }
+}
+
 
 })
 

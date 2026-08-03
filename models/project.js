@@ -38,10 +38,34 @@ const projectSchema = new mongoose.Schema(
         ],
 
         owner: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "user",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: true
+},
+
+documents: [
+    {
+        publicId: {
+            type: String,
             required: true
+        },
+
+        url: {
+            type: String,
+            required: true
+        },
+
+        originalName: {
+            type: String,
+            required: true
+        },
+
+        uploadedAt: {
+            type: Date,
+            default: Date.now
         }
+    }
+]
     },
     {
         timestamps: true

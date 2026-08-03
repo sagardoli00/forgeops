@@ -1,6 +1,7 @@
 const Project = require("../models/project")
 const asyncHandler = require("../utils/asyncHandler")
 const AppError = require("../utils/AppError")
+const { uploadToCloudinary } = require("../services/uploadService");
 
 const createProject = asyncHandler(async (req, res) => {
 
@@ -191,10 +192,46 @@ const deleteProject = asyncHandler(async (req, res) => {
     })
 })
 
+async function uploadProjectDocument(req, res) {
+    if (!req.file) {
+        throw new AppError("Please upload a document", 400);
+    }
+
+    const project = await Project.findById(req.params.id);
+
+    if (!project) {
+        throw new AppError("Project not found", 404);
+    }
+
+    if (project.owner.toString() !== req.user._id.toString()) {
+        throw new AppError("Unauthorized", 403);
+    }
+
+    const result = await uploadToCloudinary(
+        req.file.buffer,
+        "forgeops/project-documents"
+    );
+
+    project.documents.push({
+        publicId: result.public_id,
+        url: result.secure_url,
+        originalName: req.file.originalname
+    });
+
+    await project.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Document uploaded successfully",
+        document: project.documents[project.documents.length - 1]
+    });
+}
+
 module.exports = {
     createProject,
     getProjects,
     getProjectById,
     updateProject,
-    deleteProject
+    deleteProject,
+    uploadProjectDocument,
 }

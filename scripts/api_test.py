@@ -206,9 +206,10 @@ def get_project_by_id():
 
     pass_test("Get Project By ID")
 
-    def update_project():
 
-     print("\nUpdating Project...")
+def update_project():
+
+    print("\nUpdating Project...")
 
     payload = {
         "title": "Updated Project",
@@ -442,7 +443,7 @@ def main():
     get_project_by_id()
 
     update_project()
-
+ 
     search_projects()
 
     pagination_test()

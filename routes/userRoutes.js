@@ -1,5 +1,6 @@
 const express = require("express");
 
+
 const {
     registerUser,
     loginUser,
@@ -9,9 +10,11 @@ const {
     verifyEmail,
     forgotPassword,
     resetPassword,
+    uploadProfileImage,
 } = require("../controllers/userController");
 
 const authMiddleware = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware");
 
 const {
     validateRegister,
@@ -85,6 +88,13 @@ router.get(
             user: req.user
         });
     }
+);
+
+router.patch(
+    "/profile-image",
+    authMiddleware,
+    upload.single("profileImage"),
+    uploadProfileImage
 );
 
 module.exports = router;

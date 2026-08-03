@@ -2,13 +2,15 @@ const express = require("express")
 const router = express.Router()
 
 const validateObjectId = require("../validators/objectIdValidator")
+const upload = require("../middleware/uploadMiddleware");
 
 const {
     createProject,
     getProjects,
     getProjectById,
     updateProject,
-    deleteProject
+    deleteProject,
+    uploadProjectDocument
 } = require("../controllers/projectController")
 
 const authMiddleware = require("../middleware/authMiddleware")
@@ -55,5 +57,12 @@ router.delete(
     validateObjectId,
     deleteProject
 )
+
+router.post(
+    "/:id/documents",
+    authMiddleware,
+    upload.single("document"),
+    uploadProjectDocument
+);
 
 module.exports = router
