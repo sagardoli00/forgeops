@@ -28,8 +28,11 @@ const handleValidationErrors = require("../middleware/handleValidationErrors");
 
 const router = express.Router();
 
+const { authLimiter } = require("../middleware/rateLimiter");
+
 router.post(
     "/register",
+     authLimiter,
     validateRegister,
     handleValidationErrors,
     registerUser
@@ -44,6 +47,7 @@ router.post(
 
 router.post(
     "/forgot-password",
+     authLimiter,
     validateForgotPassword,
     handleValidationErrors,
     forgotPassword
@@ -58,6 +62,7 @@ router.post(
 
 router.post(
     "/login",
+     authLimiter,
     validateLogin,
     handleValidationErrors,
     loginUser

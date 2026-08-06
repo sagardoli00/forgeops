@@ -6,7 +6,10 @@ function authMiddleware(req, res, next) {
     const authHeader = req.headers.authorization
 
 if (!authHeader) {
-    return res.status(401).send("Access Denied")
+    return res.status(401).json({
+    success: false,
+    message: "Access Denied",
+    });
 }
 
 const token = authHeader.split(" ")[1]
@@ -21,7 +24,10 @@ next()
 
 } catch (error) {
 
-    return res.status(401).send("Invalid Token")
+    return res.status(401).json({
+    success: false,
+    message: "Invalid Token",
+    });
 
 }
 

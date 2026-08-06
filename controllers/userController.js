@@ -393,7 +393,7 @@ async function uploadProfileImage(req, res) {
         "forgeops/profile-images"
     );
 
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user.id);
 
     user.profileImage = {
         publicId: result.public_id,
