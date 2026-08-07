@@ -17,42 +17,42 @@ const authMiddleware = require("../middleware/authMiddleware")
 
 const {
     validateProject,
-    validateProjectUpdate,
-    handleValidationErrors
+    validateProjectUpdate
 } = require("../validators/projectValidator")
+const handleValidationErrors = require("../middleware/handleValidationErrors")
 
 router.post(
-    "/projects",
+    "/",
     authMiddleware,
     validateProject,
-    handleValidationErrors,
+    handleValidationErrors({ format: "fields" }),
     createProject
 )
 
 router.get(
-    "/projects",
+    "/",
     authMiddleware,
     getProjects
 )
 
 router.get(
-    "/projects/:id",
+    "/:id",
     authMiddleware,
     validateObjectId,
     getProjectById
 )
 
 router.put(
-    "/projects/:id",
+    "/:id",
     authMiddleware,
     validateObjectId,
     validateProjectUpdate,
-    handleValidationErrors,
+    handleValidationErrors({ format: "fields" }),
     updateProject
 )
 
 router.delete(
-    "/projects/:id",
+    "/:id",
     authMiddleware,
     validateObjectId,
     deleteProject

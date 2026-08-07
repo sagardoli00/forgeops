@@ -32,6 +32,14 @@ test("should not allow another user to update someone else's project", async () 
       title: "Hacked Project",
     });
 
+  console.log("Status:", res.status);
+  console.log("Body:", JSON.stringify(res.body, null, 2));
+
+  if (res.body.stack) {
+    console.log("Stack:");
+    console.log(res.body.stack);
+  }
+
   expect(res.status).toBe(403);
   expect(res.body.success).toBe(false);
 

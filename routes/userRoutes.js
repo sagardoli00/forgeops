@@ -10,6 +10,7 @@ const {
     verifyEmail,
     forgotPassword,
     resetPassword,
+    getProfile,
     uploadProfileImage,
 } = require("../controllers/userController");
 
@@ -87,12 +88,7 @@ router.post(
 router.get(
     "/profile",
     authMiddleware,
-    (req, res) => {
-        res.json({
-            success: true,
-            user: req.user
-        });
-    }
+    getProfile
 );
 
 router.patch(

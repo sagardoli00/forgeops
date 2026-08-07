@@ -7,6 +7,7 @@ const cors = require("cors");
 
 const userRoutes = require("./routes/userRoutes");
 const projectRoutes = require("./routes/projectRoutes");
+const organizationRoutes = require("./routes/organizationRoutes");
 const errorMiddleware = require("./middleware/errorMiddleware");
 const loggerMiddleware = require("./middleware/loggerMiddleware");
 
@@ -28,7 +29,8 @@ app.use(helmet());
 app.use(loggerMiddleware);
 
 app.use(userRoutes);
-app.use(projectRoutes);
+app.use("/projects", projectRoutes);
+app.use("/organizations", organizationRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to ForgeOps");
